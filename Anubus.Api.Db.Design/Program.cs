@@ -2,7 +2,7 @@ using Anubus;
 using Anubus.Api.Db;
 using Anubus.Db;
 
-Anubus.Services.Logs.LoggerConfiguration.ConfigureWebApiPart();
+Anubus.Services.Logging.LoggerConfiguration.ConfigureWebApiPart();
 Log.Default.Here().Fatal("Start DbDesign Anubus");
 
 

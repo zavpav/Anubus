@@ -1,3 +1,4 @@
+using Anubus.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,11 +34,11 @@ namespace AnubusAutharizationStub.Controllers
         public async Task<IActionResult> Create(string login, string name, string[] roles)
         {
             using var dbContext = await this._dbContextFactory.CreateDbContextAsync();
-            var user = new UserStub 
-            { 
+            var user = new UserStub
+            {
                 Login = login,
                 Name = name,
-                Roles = roles
+                Roles = roles.Select(x => (EnumAnubusRole)Enum.Parse(typeof(EnumAnubusRole), x)).ToArray()
             };
 
             dbContext.Add(user);

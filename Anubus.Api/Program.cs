@@ -1,14 +1,14 @@
 using Anubus.Api;
 using Anubus.Api.Db;
 using Anubus.Db;
-using Anubus.Services.Logs;
+using Anubus.Services.Logging;
 using Anubus.Services.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-Anubus.Services.Logs.LoggerConfiguration.ConfigureWebApiPart();
+Anubus.Services.Logging.LoggerConfiguration.ConfigureWebApiPart();
 
 Log.Default.Here().Fatal("Start Anubus");
 
