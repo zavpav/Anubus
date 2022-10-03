@@ -5,5 +5,7 @@ global using global::System.Threading.Tasks;
 global using global::System.Text;
 global using global::System.Text.RegularExpressions;
 
+global using global::Anubus;
+
 global using global::TechTalk.SpecFlow;
 global using global::NUnit.Framework;
