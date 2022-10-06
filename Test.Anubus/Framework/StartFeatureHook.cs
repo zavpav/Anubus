@@ -1,6 +1,8 @@
-﻿using Ductus.FluentDocker.Builders;
+﻿using Anubus.Api.Db;
+using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Commands;
 using Ductus.FluentDocker.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace TestConsoleTest.Framework;
@@ -51,7 +53,10 @@ public class StartFeatureHook
             .Build();
         containerService.Start();
 
-        //TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IDbContextFactory<AnubusContext>));
+        var dbContextFactory = (IDbContextFactory<AnubusContext>?)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IDbContextFactory<AnubusContext>))
+            ?? throw new NotSupportedException("Несконфигурирована фабрика баз"); ;
+        using var dbContext = dbContextFactory.CreateDbContext();
+        dbContext.Database.Migrate();
     }
 
     /// <summary> Удалить контейнеры для тестов </summary>
