@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CS8600: Converting null literal or possible null value to non-nullable type.
+dotnet_diagnostic.CS8600.severity = none
+dotnet_diagnostics.CA1707.severity = none
+# Use StringComparison when comparing strings.
+dotnet_diagnostics.RCS1155.severity = none

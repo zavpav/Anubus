@@ -20,7 +20,7 @@ public class SprRzPrzController : Controller
             c =>
             {
                 c.CreateProjection<SprRzPrz, SprRzPrzListDto>();
-                c.CreateProjection<SprRzPrz, SprRzPrzItemDto>();
+                c.CreateProjection<SprRzPrz, SprRzPrzEntityDto>();
             }
             );
     }
@@ -42,7 +42,7 @@ public class SprRzPrzController : Controller
     }
 
     /// <summary> DTO представления справочника РзПрз </summary>
-    public class SprRzPrzListDto : SprSimpleDto
+    public class SprRzPrzListDto : SprSimpleListDto
     {
     }
     #endregion
@@ -50,7 +50,7 @@ public class SprRzPrzController : Controller
     #region Работа с отдельным элементов справочника
 
     /// <summary> DTO редактирования справочника РзПрз </summary>
-    public class SprRzPrzItemDto : SprSimpleDto
+    public class SprRzPrzEntityDto : SprSimpleEntityDto
     {
     }
     #endregion

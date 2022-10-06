@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Test.Anubus.Spr
+namespace Test.AnubusTest.Spr
 {
     using TechTalk.SpecFlow;
     using System;

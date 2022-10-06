@@ -20,7 +20,7 @@ public class SprGrbsController : Controller
             c =>
             {
                 c.CreateProjection<SprGrbs, SprGrbsListDto>();
-                c.CreateProjection<SprGrbs, SprGrbsItemDto>();
+                c.CreateProjection<SprGrbs, SprGrbsEntityDto>();
             }
             );
     }
@@ -42,7 +42,7 @@ public class SprGrbsController : Controller
     }
 
     /// <summary> DTO представления справочника ГРБС </summary>
-    public class SprGrbsListDto : SprSimpleDto
+    public class SprGrbsListDto : SprSimpleListDto
     {
     }
     #endregion
@@ -50,7 +50,7 @@ public class SprGrbsController : Controller
     #region Работа с отдельным элементов справочника
 
     /// <summary> DTO редактирования справочника ГРБС </summary>
-    public class SprGrbsItemDto : SprSimpleDto
+    public class SprGrbsEntityDto : SprSimpleEntityDto
     {
     }
     #endregion

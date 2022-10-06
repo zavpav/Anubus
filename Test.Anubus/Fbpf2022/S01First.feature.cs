@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Test.Anubus.Fbpf2022
+namespace Test.AnubusTest.Fbpf2022
 {
     using TechTalk.SpecFlow;
     using System;
@@ -98,6 +98,26 @@ ForthSumm - Третий проход формирования сумм РР5 (�
         }
         
         [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Туда-сюда")]
+        public void Туда_Сюда()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Туда-сюда", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            this.ScenarioInitialize(scenarioInfo);
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+                testRunner.Given("тест", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Дано ");
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Базовый скрипт обучения 2022")]
         public void БазовыйСкриптОбучения2022()
         {
@@ -115,6 +135,7 @@ ForthSumm - Третий проход формирования сумм РР5 (�
                 testRunner.Given("логинимся под \'ЦА\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Дано ");
                 testRunner.And("проверяем рабочий год =2022", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
                 testRunner.And("пересоздать временную папку", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+                testRunner.When("Выполняем сценарий \'Заполнение настроек пользователя (контекст)\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
                 testRunner.When("Выполняем сценарий \'Первичная загрузка справочников к обучению 2022\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
                 testRunner.And("Выполняем сценарий \'Первичное создание БР к обучению 2022\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
                 testRunner.And("Выполняем сценарий \'Первичное создание БР к обучению ПОФ 2022\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");

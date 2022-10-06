@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anubus.Api", "Anubus.Api\Anubus.Api.csproj", "{9EFBB758-6F7C-478B-A6C2-D103081630CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Anubus", "Test.Anubus\Test.Anubus.csproj", "{8CEF3AFE-6FEB-43DF-9140-0761FA584513}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AnubusTest", "Test.Anubus\Test.AnubusTest.csproj", "{8CEF3AFE-6FEB-43DF-9140-0761FA584513}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anubus.Services", "Abubus.Services\Anubus.Services.csproj", "{ACBB660C-47AC-4257-9B5C-B9A23A41EADE}"
 EndProject
@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anubus.SpecFlowPlugin", "An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anubus.Api.Db.Design", "Anubus.Api.Db.Design\Anubus.Api.Db.Design.csproj", "{4E4630D7-914E-4A3A-B7A1-ABD412708B4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnubusAutharizationStub", "AnubusAutharizationStub\AnubusAutharizationStub.csproj", "{4AB10C4A-9F2D-455B-AD6F-AF14BF93866D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnubusAutharizationStub", "AnubusAutharizationStub\AnubusAutharizationStub.csproj", "{4AB10C4A-9F2D-455B-AD6F-AF14BF93866D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45029FA7-1BB2-495D-BC97-A0C32731A7EF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
