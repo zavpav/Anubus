@@ -11,7 +11,7 @@ var startUp = new StartUp(builder.Host);
 
 startUp.ConfigureLogger(builder.Services);
 
-startUp.ConfigureDatabse(builder.Services);
+startUp.ConfigureDatabse(builder.Configuration, builder.Services);
 
 startUp.ConfigureWebPartServices(builder.Services);
 

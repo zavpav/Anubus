@@ -24,23 +24,14 @@ public static class TypePropertyHelper
             : interafaceType.IsAssignableFrom(type);
     }
 
-    /// <summary>
-    /// Проверка, что объект реализует данный интерфейс
-    /// </summary>
-    /// <param name="sprRow"></param>
-    /// <param name="interfaceType"></param>
-    /// <returns></returns>
+    /// <summary> Проверка, что объект реализует данный интерфейс </summary>
     public static bool CheckInterface(object sprRow, Type interfaceType)
     {
         return sprRow.GetType().GetInterfaces().Any(t => t == interfaceType);
     }
 
 
-    /// <summary>
-    /// Получить список всех свойств объекта
-    /// </summary>
-    /// <param name="domainType"></param>
-    /// <returns></returns>
+    /// <summary> Получить список всех свойств объекта </summary>
     public static PropertyInfo[] GetPropertiesInfo(this Type domainType)
     {
         return domainType.GetProperties(BindingFlags.FlattenHierarchy
@@ -48,13 +39,7 @@ public static class TypePropertyHelper
                                         | BindingFlags.Public);
     }
 
-    /// <summary>
-    /// Получить имя свойства
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="t"></param>
-    /// <param name="displayMember"></param>
-    /// <returns></returns>
+    /// <summary> Получить имя свойства </summary>
     public static string DomainPropertyName<T>(this T? t, Expression<Func<T, object>> displayMember)
         where T : class
     {
@@ -62,12 +47,9 @@ public static class TypePropertyHelper
     }
 
 
-    /// <summary>
-    /// Получить мембер свойства из Expression
-    /// </summary>
+    /// <summary> Получить member свойства из Expression </summary>
     /// <typeparam name="TDomain">Тип доменного объекта</typeparam>
     /// <param name="property">Expression свойства</param>
-    /// <returns></returns>
     public static MemberInfo ExpressionMemberProperty<TDomain>(this Expression<Func<TDomain, object>> property)
         where TDomain : class
     {
@@ -84,9 +66,7 @@ public static class TypePropertyHelper
         return memberExpression.Member;
     }
 
-    /// <summary>
-    /// Получить мембер свойства из Expression
-    /// </summary>
+    /// <summary> Получить member свойства из Expression </summary>
     /// <typeparam name="TDomain">Тип доменного объекта</typeparam>
     /// <typeparam name="TReturnType">Тип возвращаемого значения</typeparam>
     /// <param name="property">Expression свойства</param>
@@ -110,7 +90,7 @@ public static class TypePropertyHelper
 
     /// <summary>
     /// Получить MethodInfo из Expression
-    /// bool Mehtod(TDomainType d)
+    /// bool Method(TDomainType d)
     /// </summary>
     /// <typeparam name="TDomain">Тип доменного объекта</typeparam>
     /// <typeparam name="TReturnType">Возвращаемое значение функции</typeparam>
@@ -122,12 +102,12 @@ public static class TypePropertyHelper
         var callExpression = (MethodCallExpression)((UnaryExpression)method.Body).Operand;
         var methodConstantExpression = (ConstantExpression)callExpression.Arguments[2];
         var memberInfo = (MemberInfo)methodConstantExpression.Value;
+        if (memberInfo == null)
+            throw new TestException("memberInfo == null. Вроде нельзя у меня");
         return memberInfo;
     }
 
-    /// <summary>
-    /// Получить мембер свойства из Expression
-    /// </summary>
+    /// <summary> Получить member свойства из Expression </summary>
     /// <param name="property">Expression свойства</param>
     /// <returns></returns>
     public static MemberInfo GetMemberInfo(this Expression property)

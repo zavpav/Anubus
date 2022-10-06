@@ -28,6 +28,8 @@ public class TestDomainInformation : ITestDomainInformation
         public string? ClientListUrl { get; set; }
     }
 
+#pragma warning disable CS8618 // Пока не придумал что с этим делать. Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable. 
+
     /// <summary> Вспомогательный класс описания информации поля </summary>
     public class DomainPropertyInfo
     {
@@ -45,6 +47,7 @@ public class TestDomainInformation : ITestDomainInformation
         /// <remarks> Если свойство только для чтения, сюда запихивается stub с логированием</remarks>
         public Action<object, string> Setter { get; internal set; }
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     /// <summary> Логгер </summary>
     public ILogger Logger { get { return Log.Default; } }

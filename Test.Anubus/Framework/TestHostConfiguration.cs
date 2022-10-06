@@ -1,7 +1,7 @@
 ﻿using Anubus.Api;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TestConsoleTest.Framework;
 
 namespace TestConsoleTest.Framework;
 
@@ -25,12 +25,14 @@ public class TestHostConfiguration
     public void Configure(string[] args)
     {
         var builder = Host.CreateDefaultBuilder(args);
-        var startUp = new StartUp(builder);
+        var startUp = new StartUp(builder, true);
 
-        builder = builder.ConfigureServices((_, services) =>
+        builder = builder.ConfigureServices((hostContext, services) =>
             {
+                services.AddSingleton<IConfiguration>(hostContext.Configuration);
+
                 startUp.ConfigureLogger(services);
-                startUp.ConfigureDatabse(services);
+                startUp.ConfigureDatabse(hostContext.Configuration, services);
                 startUp.ConfigureWebPartServices(services); //(в тестах не нужна эта регистрация) но она будет пропущена
 
                 services.AddSingleton<ITestDomainInformation, TestDomainInformation>();

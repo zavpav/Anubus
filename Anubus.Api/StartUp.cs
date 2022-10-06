@@ -1,4 +1,5 @@
 ﻿using Anubus.Db;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
@@ -27,17 +28,17 @@ public class StartUp
         Anubus.Services.Logging.LoggerConfiguration.ConfigureWebApiPart();
 
         Log.Default.Here().Fatal("Start Anubus");
-       
+
         if (!this._skipWebData)
             Serilog.SerilogHostBuilderExtensions.UseSerilog(this._hostBuilder);
-        
+
         services.AddTransient<Anubus.ILogger>(_ => Log.Default);
     }
 
     /// <summary> Конфигурация БД </summary>
-    public void ConfigureDatabse(IServiceCollection services)
+    public void ConfigureDatabse(IConfiguration configuration, IServiceCollection services)
     {
-        services.DefaultPgConfiguration<AnubusContext>();
+        services.DefaultPgConfiguration<AnubusContext>(configuration);
         services.AddTransient<IDbAnubusContextFactory<IGrbsDbContext>>(
             s => new DbAnubusContextFactory<IGrbsDbContext, AnubusContext>(s.GetRequiredService<IDbContextFactory<AnubusContext>>()));
     }
