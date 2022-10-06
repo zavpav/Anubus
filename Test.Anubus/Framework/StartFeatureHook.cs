@@ -8,10 +8,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace TestConsoleTest.Framework;
 
-#pragma warning disable RCS1102 // Make class static.
 [Binding]
-public class StartFeatureHook
-#pragma warning restore RCS1102 // Make class static.
+public static class StartFeatureHook
 {
 
     [BeforeFeature]
@@ -37,7 +35,12 @@ public class StartFeatureHook
         CreateSingleDb<AnubusContext>("API_DB", "apidb");
     }
 
-    private static void CreateSingleDb<TContext>(string configSectionName, string dockerConatainerName)
+    /// <summary> Создание докера для базы и заполнение базы </summary>
+    /// <typeparam name="TContext">Контекст базы для миграции</typeparam>
+    /// <param name="configSectionName">Секция с настройками БД (пользователи-порты)</param>
+    /// <param name="dockerConatainerNamePostfix">Постфикс для имени контейнера</param>
+    /// <exception cref="NotSupportedException">Разные ошибки</exception>
+    private static void CreateSingleDb<TContext>(string configSectionName, string dockerConatainerNamePostfix)
         where TContext : DbContext
     {
         var configuration = (IConfiguration)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IConfiguration))
@@ -48,8 +51,8 @@ public class StartFeatureHook
         var containerService = new Builder()
             .UseContainer()
             .UseImage("postgres:14")
-            .WithName("anubus-test-" + dockerConatainerName)
-            .WithHostName("anubus-test-" + dockerConatainerName)
+            .WithName("anubus-test-" + dockerConatainerNamePostfix)
+            .WithHostName("anubus-test-" + dockerConatainerNamePostfix)
             .ExposePort(dbLocalPort, 5432)
             .WithEnvironment(
                 "POSTGRES_USER=" + apiDbSection.GetValue<string>("DB_USER"),
@@ -59,7 +62,7 @@ public class StartFeatureHook
             .Build();
         containerService.Start();
 
-        Thread.Sleep(1000);
+        Thread.Sleep(1000); // Чуть-чуть не успевает подняться контейнер. Поэтому пробуем подождать.
 
         try
         {
@@ -68,8 +71,8 @@ public class StartFeatureHook
             using (var dbContext = dbContextFactory.CreateDbContext())
             {
                 Log.Default.Here().Warning("Пересоздание базы {ConfigSectionName} {DbContext}",
-                    configSectionName,
-                    dbContext.GetType().Name);
+                                    configSectionName,
+                                    dbContext.GetType().Name);
                 dbContext.Database.Migrate();
             }
         }
@@ -106,7 +109,7 @@ public class StartFeatureHook
             }
             try
             {
-                docker.Host.RemoveContainer(container.Id, true, true, null);
+                docker.Host.RemoveContainer(container.Id, force: true, removeVolumes: true);
             } 
             catch (Exception ex)
             {
