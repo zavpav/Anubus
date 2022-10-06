@@ -6,6 +6,8 @@ using Anubus.Api.Domain.Spr;
 
 namespace Anubus.Api.Db;
 
+//dotnet ef migrations add Intial -c AnubusContext -o Database/Migrations 
+
 public class AnubusContext : DbContext, IGrbsDbContext
 {
     public AnubusContext(DbContextOptions<AnubusContext> options) : base(options)

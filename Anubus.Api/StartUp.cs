@@ -38,7 +38,7 @@ public class StartUp
     /// <summary> Конфигурация БД </summary>
     public void ConfigureDatabse(IConfiguration configuration, IServiceCollection services)
     {
-        services.DefaultPgConfiguration<AnubusContext>(configuration);
+        services.DefaultPgConfiguration<AnubusContext>(configuration.GetSection("API_DB"));
         services.AddTransient<IDbAnubusContextFactory<IGrbsDbContext>>(
             s => new DbAnubusContextFactory<IGrbsDbContext, AnubusContext>(s.GetRequiredService<IDbContextFactory<AnubusContext>>()));
     }

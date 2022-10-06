@@ -8,7 +8,7 @@ Log.Default.Here().Fatal("Start DbDesign Anubus");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.DefaultPgConfiguration<AnubusContext>(builder.Configuration);
+builder.Services.DefaultPgConfiguration<AnubusContext>(builder.Configuration.GetSection("API_DB"));
 
 var app = builder.Build();
 app.Run();

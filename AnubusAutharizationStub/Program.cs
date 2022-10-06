@@ -1,7 +1,10 @@
+using Anubus.Db;
 using AnubusAutharizationStub;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Anubus.Services.Logging.LoggerConfiguration.ConfigureWebApiPart();
+Serilog.SerilogHostBuilderExtensions.UseSerilog(builder.Host);
 
 // Add services to the container.
 
@@ -10,25 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
-
-string host = "localhost";
-int port = 5441;
-string database = "authStub";
-string username = "postgres";
-string password = "123456";
-
-builder.Services.AddPooledDbContextFactory<AuthStubDbContext>(opt => opt
-        .UseNpgsql($"Host={host};Port={port};Database={database};Username={username};Password={password}")
-        .EnableDetailedErrors()
-        .EnableSensitiveDataLogging(true)
-        .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information)
-    );
-
-
-
-
+builder.Services.DefaultPgConfiguration<AuthStubDbContext>(builder.Configuration.GetSection("AUTH_STUB_DB"));
 
 var app = builder.Build();
 

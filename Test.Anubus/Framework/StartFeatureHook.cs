@@ -1,4 +1,5 @@
 ﻿using Anubus.Api.Db;
+using AnubusAutharizationStub;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Commands;
 using Ductus.FluentDocker.Services;
@@ -30,20 +31,25 @@ public class StartFeatureHook
     /// <summary> Подготовка базы к тестам </summary>
     public static void PreparingDatabase()
     {
-        var configuration = (IConfiguration?)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IConfiguration))
-                            ?? throw new NotSupportedException("Несконфигурирована конфигурация");
-
-        var apiDbSection = configuration.GetSection("API_DB");
-
-        var dbLocalPort = apiDbSection.GetValue<int>("DB_PORT");
-
         DeleteAnubusTestContainer();
+
+        CreateSingleDb<AuthStubDbContext>("AUTH_STUB_DB", "authstubdb");
+        CreateSingleDb<AnubusContext>("API_DB", "apidb");
+    }
+
+    private static void CreateSingleDb<TContext>(string configSectionName, string dockerConatainerName)
+        where TContext : DbContext
+    {
+        var configuration = (IConfiguration)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IConfiguration))
+                            ?? throw new NotSupportedException("Несконфигурирована конфигурация");
+        var apiDbSection = configuration.GetSection(configSectionName);
+        var dbLocalPort = apiDbSection.GetValue<int>("DB_PORT");
 
         var containerService = new Builder()
             .UseContainer()
             .UseImage("postgres:14")
-            .WithName("anubus-test-db")
-            .WithHostName("anubus-test-db")
+            .WithName("anubus-test-" + dockerConatainerName)
+            .WithHostName("anubus-test-" + dockerConatainerName)
             .ExposePort(dbLocalPort, 5432)
             .WithEnvironment(
                 "POSTGRES_USER=" + apiDbSection.GetValue<string>("DB_USER"),
@@ -53,10 +59,27 @@ public class StartFeatureHook
             .Build();
         containerService.Start();
 
-        var dbContextFactory = (IDbContextFactory<AnubusContext>?)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IDbContextFactory<AnubusContext>))
-            ?? throw new NotSupportedException("Несконфигурирована фабрика баз"); ;
-        using var dbContext = dbContextFactory.CreateDbContext();
-        dbContext.Database.Migrate();
+        Thread.Sleep(1000);
+
+        try
+        {
+            var dbContextFactory = (IDbContextFactory<TContext>?)TestHostConfiguration.ConfiguredHost.Services.GetService(typeof(IDbContextFactory<TContext>))
+                ?? throw new NotSupportedException("Несконфигурирована фабрика баз"); ;
+            using (var dbContext = dbContextFactory.CreateDbContext())
+            {
+                Log.Default.Here().Warning("Пересоздание базы {ConfigSectionName} {DbContext}",
+                    configSectionName,
+                    dbContext.GetType().Name);
+                dbContext.Database.Migrate();
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Default.Here().Error(ex, "Пересоздание базы {ConfigSectionName}", 
+                configSectionName);
+
+            throw;
+        }
     }
 
     /// <summary> Удалить контейнеры для тестов </summary>

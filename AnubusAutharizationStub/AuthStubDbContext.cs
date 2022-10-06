@@ -5,6 +5,10 @@ namespace AnubusAutharizationStub;
 
 public class AuthStubDbContext : DbContext
 {
+    public AuthStubDbContext(DbContextOptions<AuthStubDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<UserStub> UsersStub { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
