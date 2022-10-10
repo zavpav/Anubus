@@ -1,4 +1,4 @@
-﻿namespace TestConsoleTest.Framework;
+﻿namespace TestConsoleTest;
 
 public static class NutTestTableHelper
 {

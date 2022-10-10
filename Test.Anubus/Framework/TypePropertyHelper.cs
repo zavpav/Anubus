@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 /// <summary> Вспомогательные методы работы с типами </summary>
 public static class TypePropertyHelper

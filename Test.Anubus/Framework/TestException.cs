@@ -1,4 +1,4 @@
-﻿namespace TestConsoleTest.Framework;
+﻿namespace TestConsoleTest;
 
 [Serializable]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1194:Implement exception constructors.", Justification = "<Pending>")]

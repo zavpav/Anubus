@@ -1,6 +1,4 @@
-﻿using TestConsoleTest.Framework;
-
-namespace ConsoleTest;
+﻿namespace TestConsoleTest;
 
 [Binding]
 public class ExecuteScenarionFbpfSteps : ExecuteExternalScenarioSteps

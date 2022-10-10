@@ -1,6 +1,4 @@
-﻿namespace TestConsoleTest.Framework;
-
-
+﻿namespace TestConsoleTest;
 public interface ITestContext
 {
 	//[NotNull]

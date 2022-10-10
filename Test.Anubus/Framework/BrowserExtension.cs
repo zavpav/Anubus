@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using Protractor;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 /// <summary> Набор методов работы с selenium для gerkin тестов </summary>
 public static class BrowserExtension

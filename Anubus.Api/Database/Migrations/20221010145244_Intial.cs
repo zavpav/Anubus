@@ -32,8 +32,8 @@ namespace Anubus.Api.Database.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DocNum = table.Column<string>(type: "text", nullable: false),
-                    ApproveDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreateDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ApproveDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreateDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DocStatus = table.Column<string>(type: "text", nullable: false),
                     DocStatusName = table.Column<string>(type: "text", nullable: false),
                     Descr = table.Column<string>(type: "text", nullable: false),
@@ -56,8 +56,8 @@ namespace Anubus.Api.Database.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DocNum = table.Column<string>(type: "text", nullable: false),
-                    ApproveDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreateDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ApproveDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreateDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DocStatus = table.Column<string>(type: "text", nullable: false),
                     DocStatusName = table.Column<string>(type: "text", nullable: false),
                     Descr = table.Column<string>(type: "text", nullable: false),
@@ -80,8 +80,8 @@ namespace Anubus.Api.Database.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DocNum = table.Column<string>(type: "text", nullable: false),
-                    ApproveDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreateDt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ApproveDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreateDt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     DocStatus = table.Column<string>(type: "text", nullable: false),
                     DocStatusName = table.Column<string>(type: "text", nullable: false),
                     Descr = table.Column<string>(type: "text", nullable: false),
@@ -107,8 +107,8 @@ namespace Anubus.Api.Database.Migrations
                     Code = table.Column<string>(type: "text", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
-                    OnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    OnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ToDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -125,8 +125,8 @@ namespace Anubus.Api.Database.Migrations
                     Code = table.Column<string>(type: "text", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
-                    OnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    OnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ToDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -145,8 +145,8 @@ namespace Anubus.Api.Database.Migrations
                     Code = table.Column<string>(type: "text", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
-                    OnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    OnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ToDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     IsRezerv = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -164,8 +164,8 @@ namespace Anubus.Api.Database.Migrations
                     Code = table.Column<string>(type: "text", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
-                    OnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    OnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ToDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -182,8 +182,8 @@ namespace Anubus.Api.Database.Migrations
                     Code = table.Column<string>(type: "text", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
-                    OnDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ToDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    OnDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ToDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,7 +208,7 @@ namespace Anubus.Api.Database.Migrations
                     SmLbo2 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmLbo3 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmPof = table.Column<decimal>(type: "numeric", nullable: false),
-                    SysChangeDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SysChangeDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Generation = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -245,7 +245,7 @@ namespace Anubus.Api.Database.Migrations
                     SmLbo2 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmLbo3 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmPof = table.Column<decimal>(type: "numeric", nullable: false),
-                    SysChangeDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SysChangeDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Generation = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -282,7 +282,7 @@ namespace Anubus.Api.Database.Migrations
                     SmLbo2 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmLbo3 = table.Column<decimal>(type: "numeric", nullable: false),
                     SmPof = table.Column<decimal>(type: "numeric", nullable: false),
-                    SysChangeDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SysChangeDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Generation = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

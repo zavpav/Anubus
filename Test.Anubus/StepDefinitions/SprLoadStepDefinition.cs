@@ -1,4 +1,4 @@
-﻿namespace TestConsoleTest.Framework;
+﻿namespace TestConsoleTest;
 
 
 [Binding]
@@ -55,38 +55,59 @@ public class SprLoadStepDefinition
     [StepDefinition("есть данные в справочнике '([^']+)'")]
     public void ExistDataInSprGiven(string sprName)
     {
-        Log.Default.Warning("Заблокирован степ 'есть данные в справочнике '([^']+)''");
-
-        //var repository = TestDomainInform.GetRepository<ISprRepository>(sprName);
-        //if (!repository.ActualRowList.Any())
-        //    throw new IgnoreException("Нет данных в справочнике: " + sprName);
+        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
+        if (repository.Count() == 0)
+            throw new IgnoreException("Нет данных в справочнике: " + sprName);
     }
+
+    [StepDefinition("в справочнике '([^']+)' количество записей = '([^']+)'")]
+    public void SprRowCount(string sprName, int rowCount)
+    {
+        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
+
+        var repositoryCnt = repository.Count();
+        if (repositoryCnt != rowCount)
+            throw new TestException(string.Format("Количество записей в справочнике {0} не совпадает с ожидаемым {1} != {2}", sprName, repositoryCnt, rowCount));
+    }
+
+    [StepDefinition("в справочнике '([^']+)' есть запись с '([^']+)'='([^']+)'")]
+    public void CheckSprRow(string sprName, string rusFieldName, string fieldValue)
+    {
+        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
+        var repository = domainDesc.Repository;
+        var pi = domainDesc.PropertyInfo(rusFieldName);
+        //TODO Тут получается не совсем корректный поиск данных в списке.
+        //     pi.Getter возвращает object и он может быть числом стройкой, а сравнивается с fieldValue которая строка
+        //     Плюс поиск по всем сущностям. Это может попасть по скорости, но, вроде, не должно влиять, так как не сильно оно используется
+        if (!repository.AllEntities().Any(x =>  pi.Getter(x).Equals(fieldValue)))
+            throw new AssertionException(string.Format("Нет данных '{0}'='{1} в справочнике '{2}'({3})", rusFieldName, fieldValue, sprName, repository.GetType().Name));
+    }
+
+
 
     [StepDefinition("вводим в справочник '([^']+)' запись:")]
     [StepDefinition("вводим в справочник '([^']+)' записи:")]
     public void InsertSprRows(string sprName, Table rows)
     {
-        Log.Default.Warning("Заблокирован степ 'вводим в справочник '([^']+)' запись:'");
+        sprName = TestHelper.ReplaceVariable(sprName);
+        rows = TestHelper.ReplaceVariable(rows);
 
-        //sprName = TestHelper.ReplaceVariable(sprName);
-        //rows = TestHelper.ReplaceVariable(rows);
+        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
+        var repository = domainDesc.Repository;
 
-        //var repository = this.TestDomainInform.GetRepository<ISprRepository>(sprName);
-        //var newDomainFactory = this.TestDomainInform.GetDomainNewFactory<ISprBase>(sprName);
-
-        //foreach (var row in rows.Rows)
-        //{
-        //    try
-        //    {
-        //        var domain = TestHelper.FillSprDomain(this.TestDomainInform, sprName, newDomainFactory, row, repository);
-        //        repository.UntypedSave(domain);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LoggerS.ErrorMessage(ex, "Ошибка загрузки справочника {Строка}", row.ToDictionary(x => x.Key, x => x.Value));
-        //        throw;
-        //    }
-        //}
+        foreach (var row in rows.Rows)
+        {
+            try
+            {
+                var domain = TestHelper.CreateAndFillSpr(domainDesc, row);
+                repository.UntypedSave(domain);
+            }
+            catch (Exception ex)
+            {
+                Log.Default.Error(ex, "Ошибка загрузки справочника {Строка}", row.ToDictionary(x => x.Key, x => x.Value));
+                throw;
+            }
+        }
     }
 
     /// <summary>
@@ -98,10 +119,6 @@ public class SprLoadStepDefinition
     /// Если первая по порядку колонка - это колонка "Родитель", проверяется, что код из columnFindCheck является потомком кода из этой колонки.
     /// В противном случае данная проверка не производится.
     /// </summary>
-    /// <param name="sprName"></param>
-    /// <param name="columnFindCheck"></param>
-    /// <param name="uncheckedColumns"></param>
-    /// <param name="rows"></param>
     [StepDefinition(@"вводим в справочник '([^']+)' запись с проверкой по '([^']+)' без проверок колонок '([^']+)':")]
     [StepDefinition(@"вводим в справочник '([^']+)' записи с проверкой по '([^']+)' без проверок колонок '([^']+)':")]
     public void InsertSprRowsWithCheck(string sprName, string columnFindCheck, string uncheckedColumns, Table rows)
@@ -262,27 +279,6 @@ public class SprLoadStepDefinition
         //dbRepository.EnableResortTrigger();
     }
 
-    [StepDefinition("в справочнике '([^']+)' есть запись с '([^']+)'='([^']+)'")]
-    public void CheckSprRow(string sprName, string rusFieldName, string fieldValue)
-    {
-        Log.Default.Warning("Заблокирован степ 'в справочнике '([^']+)' есть запись с '([^']+)'='([^']+)''");
-
-        //var repository = TestDomainInform.GetRepository<IDomainRepository>(sprName);
-        //var pi = TestDomainInform.GetPropertyInfo(sprName, rusFieldName);
-        //if (!repository.UnTypedCache().Any(x => pi.GetValue(x, new object[] { }).Equals(fieldValue)))
-        //    throw new AssertionException(string.Format("Нет данных '{0}'='{1} в справочнике '{2}'({3})", rusFieldName, fieldValue, sprName, repository.GetType().Name));
-    }
-
-    [StepDefinition("в справочнике '([^']+)' количество записей = '([^']+)'")]
-    public void GivenSprRowCount(string sprName, int rowCount)
-    {
-        Log.Default.Warning("Заблокирован степ 'в справочнике '([^']+)' количество записей = '([^']+)''");
-
-        //var repository = this.TestDomainInform.GetRepository<IDomainRepository>(sprName);
-        //var repositoryCnt = repository.UnTypedCache().Count();
-        //if (repositoryCnt != rowCount)
-        //    SpecFlowHelper.ThrowException(true, "Количество записей в справочнике {0} не совпадает с ожидаемым {1} != {2}", sprName, repositoryCnt, rowCount);
-    }
 
     [StepDefinition("файл '([^']+)' еще не загружен")]
     public void GivenLoadedFilesCount(string fileName)

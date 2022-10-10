@@ -2,7 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
-using TestConsoleTest.Framework;
+using TestConsoleTest;
 
 namespace Test.AnubusTest.TestOfTest
 {

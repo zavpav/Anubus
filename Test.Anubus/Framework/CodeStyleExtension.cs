@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 public static class CodeStyleExtension
 {

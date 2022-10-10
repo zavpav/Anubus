@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 /// <summary> Стартер приложения </summary>
 public class TestHostConfiguration
@@ -41,8 +41,10 @@ public class TestHostConfiguration
                 // Для тестов база идентификации своя
                 ConfigureAuthStubBase(hostContext.Configuration.GetSection("AUTH_STUB_DB"), services);
              
-                services.AddSingleton<ITestDomainInformation, TestDomainInformation>();
-                services.AddTransient<ITestContext, TestConsoleTest.Framework.TestContext>();
+                services.AddSingleton<ITestDomainInformation, DomainInformation.TestDomainInformation>();
+                services.AddTransient<ITestContext, TestContext>();
+                services.AddSingleton<ITestExternalStepParameters, TestExternalStepParameters>();
+
             }
             );
         _host = builder.Build();

@@ -1,4 +1,4 @@
-﻿namespace TestConsoleTest.Framework;
+﻿namespace TestConsoleTest;
 
 /// <summary> Набор методов работы с "числами" и прочими "значениями" </summary>
 public static class TestValueExtension

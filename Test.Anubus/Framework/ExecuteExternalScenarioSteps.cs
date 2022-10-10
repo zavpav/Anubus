@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 public abstract class ExecuteExternalScenarioSteps
 {

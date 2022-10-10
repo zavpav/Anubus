@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Xml.Linq;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 #pragma warning disable RCS1077 // Optimize LINQ method call.
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.

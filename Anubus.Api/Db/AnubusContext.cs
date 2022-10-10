@@ -3,6 +3,7 @@ using Anubus.Api.Domain.Docs.Grbs.KuDetail;
 using Anubus.Api.Domain.Docs.Grbs.ToPbs;
 using Anubus.Api.Domain.Docs.Grbs.ToRezerv;
 using Anubus.Api.Domain.Spr;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Anubus.Api.Db;
 
@@ -12,11 +13,49 @@ public class AnubusContext : DbContext, IGrbsDbContext
 {
     public AnubusContext(DbContextOptions<AnubusContext> options) : base(options)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        //AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+                v => v.ToUniversalTime(),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+        var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
+                v => v.HasValue ? v.Value.ToUniversalTime() : v,
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            if (entityType.IsKeyless)
+            {
+                continue;
+            }
+
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime))
+                {
+                    property.SetValueConverter(dateTimeConverter);
+                }
+                else if (property.ClrType == typeof(DateTime?))
+                {
+                    property.SetValueConverter(nullableDateTimeConverter);
+                }
+            }
+        }
     }
 
     public DbSet<Br> Brs { get; set; } = null!;
-
-
 
     public DbSet<DocKuDetail> GrbsKuDetails { get; set; } = null!;
 

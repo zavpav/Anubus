@@ -20,8 +20,8 @@ namespace Test.AnubusTest.Spr
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Загрузка справочников")]
-    public partial class ЗагрузкаСправочниковFeature
+    [NUnit.Framework.DescriptionAttribute("Загрузка справочников НР ПОФ")]
+    public partial class ЗагрузкаСправочниковНРПОФFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -32,7 +32,7 @@ namespace Test.AnubusTest.Spr
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru-RU"), "Spr", "Загрузка справочников", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru-RU"), "Spr", "Загрузка справочников НР ПОФ", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         

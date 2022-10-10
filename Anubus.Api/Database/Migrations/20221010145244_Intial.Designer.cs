@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Anubus.Api.Database.Migrations
 {
     [DbContext(typeof(AnubusContext))]
-    [Migration("20221006164753_Intial")]
+    [Migration("20221010145244_Intial")]
     partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,13 +55,13 @@ namespace Anubus.Api.Database.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("ApproveDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long>("BrSid")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Descr")
                         .IsRequired()
@@ -148,7 +148,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("SysChangeDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -168,13 +168,13 @@ namespace Anubus.Api.Database.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("ApproveDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long>("BrSid")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Descr")
                         .IsRequired()
@@ -261,7 +261,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("SysChangeDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -281,13 +281,13 @@ namespace Anubus.Api.Database.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("ApproveDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long>("BrSid")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateDt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Descr")
                         .IsRequired()
@@ -374,7 +374,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("SysChangeDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -402,7 +402,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("OnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
@@ -412,7 +412,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ToDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -436,7 +436,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("OnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
@@ -446,7 +446,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ToDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -473,7 +473,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("OnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
@@ -489,7 +489,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("ToDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -513,7 +513,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("OnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
@@ -523,7 +523,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ToDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -547,7 +547,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("OnDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
@@ -557,7 +557,7 @@ namespace Anubus.Api.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ToDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 

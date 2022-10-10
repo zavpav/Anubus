@@ -1,64 +1,21 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Reflection;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest.DomainInformation;
 
-/// <summary> Описание домена </summary>
-public interface ITestDomainInformation
+public partial class TestDomainInformation : ITestDomainInformation
 {
-}
-
-public class TestDomainInformation : ITestDomainInformation
-{
-    public class TestDomainInfo
-    {
-        public TestDomainInfo(string rusName, Type domainType)
-        {
-            this.RusName = rusName;
-            this.Domain = domainType;
-        }
-
-        /// <summary> Русское наименование домена </summary>
-        public string RusName { get; }
-
-        /// <summary> Доменных тип </summary>
-        public Type Domain { get; }
-
-        /// <summary> Url списка </summary>
-        public string? ClientListUrl { get; set; }
-    }
-
-#pragma warning disable CS8618 // Пока не придумал что с этим делать. Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable. 
-
-    /// <summary> Вспомогательный класс описания информации поля </summary>
-    public class DomainPropertyInfo
-    {
-        /// <summary> Русское наименование поля, если есть TestFieldDescriptionAttribute и т.д.</summary>
-        /// <remarks> Если поле не имеет "описания", то пишется "@PropertyName"</remarks>
-        public string Name { get; internal set; }
-
-        /// <summary> Реальный PropertyInfo </summary>
-        public PropertyInfo PropertyInfo { get; internal set; }
-
-        /// <summary> Getter данных </summary>
-        public Func<object, object> Getter { get; internal set; }
-
-        /// <summary> Сеттер данных по строковому значению </summary>
-        /// <remarks> Если свойство только для чтения, сюда запихивается stub с логированием</remarks>
-        public Action<object, string> Setter { get; internal set; }
-    }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
     /// <summary> Логгер </summary>
     public ILogger Logger { get { return Log.Default; } }
 
-    protected Dictionary<string, TestDomainInfo> _domainInformations = new Dictionary<string, TestDomainInfo>();
+    protected Dictionary<string, ITestDomainDescription> _domainInformations = new Dictionary<string, ITestDomainDescription>();
 
     /// <summary> Получить информацию о домене по имени </summary>
     /// <param name="rusName">Русское имя</param>
     /// <returns>Информация по домену</returns>
     /// <exception cref="IgnoreException">Стоп тестов</exception>
-    public TestDomainInfo GetDomainInfo(string rusName)
+    public ITestDomainDescription GetDomainDesc(string rusName)
     {
         if (_domainInformations.Count == 0)
             this.FillDomainInformation();
@@ -100,7 +57,7 @@ public class TestDomainInformation : ITestDomainInformation
             return action.Compile();
         });
 
-        var domainType = this.GetDomainInfo(rusName).Domain;
+        var domainType = this.GetDomainDesc(rusName).DomainType;
         foreach (var pi in domainType.GetPropertiesInfo())
         {
             var domainPropertyInfo = new DomainPropertyInfo
@@ -136,15 +93,45 @@ public class TestDomainInformation : ITestDomainInformation
                 domainPropertyInfo.Name = ((TestFieldDescriptionAttribute)descrAttr[0]).RusFieldName;
             else
             {
-                var defRusName = this.InternalRecodePropertyName2RusName(domainType, pi.Name);
-                if (defRusName != null)
-                    domainPropertyInfo.Name = defRusName;
+                descrAttr = pi.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), true);
+
+                if (descrAttr.Length > 1)
+                    throw new NotSupportedException("Нашли слишком много описаний поля " + pi.Name + " у объекта " + domainType.FullName);
+                if (descrAttr.Length == 1)
+                    domainPropertyInfo.Name = ((System.ComponentModel.DescriptionAttribute)descrAttr[0]).Description;
                 else
-                    domainPropertyInfo.Name = "@" + pi.Name;
+                {
+                    var defRusName = this.InternalRecodePropertyName2RusName(domainType, pi.Name);
+                    if (defRusName != null)
+                        domainPropertyInfo.Name = defRusName;
+                }
             }
-            allProperties.Add(domainPropertyInfo);
+
+            // Кладём русское название
+            if (!string.IsNullOrEmpty(domainPropertyInfo.Name))
+                allProperties.Add(domainPropertyInfo);
+
+            // Докидываем английское название с собакой
+            var clonePropertyInfo = domainPropertyInfo.Clone();
+            clonePropertyInfo.Name = "@" + pi.Name;
+            allProperties.Add(clonePropertyInfo);
+
         }
         return allProperties;
+    }
+
+    /// <summary> Получить информацию по свойству объекта </summary>
+    /// <param name="rusName">Русское имя сущности</param>
+    /// <param name="rusPropertyName">Русское имя свойства</param>
+    /// <exception cref="IgnoreException">Ошибка поиска информации для свойства</exception>
+    public DomainPropertyInfo GetPropertyInfo(string rusName, string rusPropertyName)
+    {
+        var domainType = this.GetDomainDesc(rusName).DomainType;
+        var allPi = this.GetAllProperties(rusName);
+        var pi = allPi.Where(p => p.Name.ToLower() == rusPropertyName.ToLower()).ToList();
+        if (pi.Count != 1)
+            throw new IgnoreException(string.Format("Ошибка получения PropertyInfo для {0}", rusPropertyName));
+        return pi[0];
     }
 
     #region Декодирование русского имя свойства
@@ -220,11 +207,14 @@ public class TestDomainInformation : ITestDomainInformation
 
     protected void FillDomainInformation()
     {
-        this._domainInformations = new Dictionary<string, TestDomainInfo>
-        {
-            {"ГРБС", new TestDomainInfo("ГРБС", typeof(Anubus.Api.Domain.Spr.SprGrbs)) },
-            {"РзПрз", new TestDomainInfo("РзПрз", typeof(Anubus.Api.Domain.Spr.SprRzPrz)) },
+        var anubusDbContextFactory = Locator.Resolve<IDbContextFactory<Anubus.Api.Db.AnubusContext>>();
 
+        this._domainInformations = new Dictionary<string, ITestDomainDescription>
+        {
+            {"ГРБС",  this.CreateDomainInfoFromAnubusApi("ГРБС", x => x.SprGrbs) },
+            {"РзПрз", this.CreateDomainInfoFromAnubusApi("РзПрз", x => x.SprRzPrz) },
+            {"ЦСР",   this.CreateDomainInfoFromAnubusApi("ЦСР", x => x.SprCsr) },
+            {"ВР",    this.CreateDomainInfoFromAnubusApi("ВР", x => x.SprVr) },
         };
     }
 }

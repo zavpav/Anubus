@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using TestConsoleTest.Framework;
+using TestConsoleTest;
 
 var testHost = new TestHostConfiguration();
 testHost.Configure(new string[0]);

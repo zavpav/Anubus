@@ -6,7 +6,7 @@ using Ductus.FluentDocker.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace TestConsoleTest.Framework;
+namespace TestConsoleTest;
 
 [Binding]
 public static class StartFeatureHook
@@ -19,6 +19,10 @@ public static class StartFeatureHook
         testHost.Configure(new string[0]);
 
         PreparingDatabase();
+
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+
     }
 
     [AfterFeature]
