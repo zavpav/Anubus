@@ -49,6 +49,23 @@ public class SprRzPrzController : Controller
 
     #region Работа с отдельным элементов справочника
 
+    /// <summary> Получить полный элемент справочника </summary>
+    [HttpGet("Entity")]
+    public async Task<JsonResult> Get(long id, bool withMeta = false)
+    {
+        using var dbContext = await this._dbContextFactory.CreateDbContextAsync();
+        var spr = await dbContext.SprRzPrz
+                .AsNoTracking()
+                .Where(x => x.Id == id)
+                .ProjectTo<SprRzPrzEntityDto>(this._autoMapperConfiguration)
+                .FirstOrDefaultAsync();
+
+        if (!withMeta)
+            return Json(spr);
+
+        return Json(await DataWithMetaHelper.ReturnWithMeta(spr));
+    }
+
     /// <summary> DTO редактирования справочника РзПрз </summary>
     public class SprRzPrzEntityDto : SprSimpleEntityDto
     {
