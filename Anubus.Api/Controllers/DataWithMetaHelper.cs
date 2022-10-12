@@ -112,7 +112,8 @@ public class DataWithMeta<T>
         this.Entity = entity;
         this.Meta = new Dictionary<string, List<MetaInformation>>();
     }
-    public T? Entity;
-    public Dictionary<string, List<MetaInformation>> Meta;
+    
+    public T? Entity { get; set; }
+    
+    public Dictionary<string, List<MetaInformation>> Meta { get; set; }
 }
-

@@ -115,7 +115,7 @@ public class DocToRezervController : Controller
         if (!withMeta)
             return Json(doc);
 
-        return Json(DataWithMetaHelper.ReturnWithMeta(doc));
+        return Json(await DataWithMetaHelper.ReturnWithMeta(doc));
     }
 
     /// <summary> DTO редактирования документа Распределение в резерв </summary>

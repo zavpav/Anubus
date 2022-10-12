@@ -40,6 +40,17 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<LogAdditionalInfoMiddleware>();
 
+app.UseCors(b => {
+    b.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    //b.AllowAnyHeader();
+    ////b.AllowAnyMethod();
+    ////b.AllowCredentials();
+    //b.AllowAnyOrigin();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
