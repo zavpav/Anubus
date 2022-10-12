@@ -4,6 +4,66 @@
 [Binding]
 public class SprLoadStepDefinition
 {
+
+    [StepDefinition("есть данные в справочнике '([^']+)'")]
+    public void ExistDataInSprGiven(string sprName)
+    {
+        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
+        if (repository.Count() == 0)
+            throw new IgnoreException("Нет данных в справочнике: " + sprName);
+    }
+
+    [StepDefinition("в справочнике '([^']+)' количество записей = '([^']+)'")]
+    public void SprRowCount(string sprName, int rowCount)
+    {
+        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
+
+        var repositoryCnt = repository.Count();
+        if (repositoryCnt != rowCount)
+            throw new TestException(string.Format("Количество записей в справочнике {0} не совпадает с ожидаемым {1} != {2}", sprName, repositoryCnt, rowCount));
+    }
+
+    [StepDefinition("в справочнике '([^']+)' есть запись с '([^']+)'='([^']+)'")]
+    public void CheckSprRow(string sprName, string rusFieldName, string fieldValue)
+    {
+        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
+        var repository = domainDesc.Repository;
+        var pi = domainDesc.PropertyInfo(rusFieldName);
+        //TODO Тут получается не совсем корректный поиск данных в списке.
+        //     pi.Getter возвращает object и он может быть числом стройкой, а сравнивается с fieldValue которая строка
+        //     Плюс поиск по всем сущностям. Это может попасть по скорости, но, вроде, не должно влиять, так как не сильно оно используется
+        if (!repository.AllEntities().Any(x => pi.Getter(x).Equals(fieldValue)))
+            throw new AssertionException(string.Format("Нет данных '{0}'='{1} в справочнике '{2}'({3})", rusFieldName, fieldValue, sprName, repository.GetType().Name));
+    }
+
+    [StepDefinition("вводим в справочник '([^']+)' запись:")]
+    [StepDefinition("вводим в справочник '([^']+)' записи:")]
+    public void InsertSprRows(string sprName, Table rows)
+    {
+        sprName = TestHelper.ReplaceVariable(sprName);
+        rows = TestHelper.ReplaceVariable(rows);
+
+        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
+        var repository = domainDesc.Repository;
+        
+        foreach (var row in rows.Rows)
+        {
+            try
+            {
+                var domain = TestHelper.CreateAndFillSpr(domainDesc, row);
+                repository.UntypedSave(domain);
+            }
+            catch (Exception ex)
+            {
+                Log.Default.Error(ex, "Ошибка загрузки справочника {Строка}", row.ToDictionary(x => x.Key, x => x.Value));
+                throw;
+            }
+        }
+    }
+
+
+
+
     [StepDefinition(@"в форме редактирования организации ввести счет")]
     public void ВФормеРедактированияОрагинзацииВвестиСчет(Table table)
     {
@@ -50,64 +110,6 @@ public class SprLoadStepDefinition
         //presentorAccount.Account = row["Номер лицевого счета"];
         //presentorAccount.TofkSid = Locator.Resolve<ISprTofkRepository>().Cache.IsActual(Locator.Resolve<IMainContext>().Glodate).Single(x => x.Code == row["ТОФК"]).Sid;
         //gridView.RefreshData();
-    }
-
-    [StepDefinition("есть данные в справочнике '([^']+)'")]
-    public void ExistDataInSprGiven(string sprName)
-    {
-        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
-        if (repository.Count() == 0)
-            throw new IgnoreException("Нет данных в справочнике: " + sprName);
-    }
-
-    [StepDefinition("в справочнике '([^']+)' количество записей = '([^']+)'")]
-    public void SprRowCount(string sprName, int rowCount)
-    {
-        var repository = TDI.Instance.GetDomainDesc(sprName).Repository;
-
-        var repositoryCnt = repository.Count();
-        if (repositoryCnt != rowCount)
-            throw new TestException(string.Format("Количество записей в справочнике {0} не совпадает с ожидаемым {1} != {2}", sprName, repositoryCnt, rowCount));
-    }
-
-    [StepDefinition("в справочнике '([^']+)' есть запись с '([^']+)'='([^']+)'")]
-    public void CheckSprRow(string sprName, string rusFieldName, string fieldValue)
-    {
-        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
-        var repository = domainDesc.Repository;
-        var pi = domainDesc.PropertyInfo(rusFieldName);
-        //TODO Тут получается не совсем корректный поиск данных в списке.
-        //     pi.Getter возвращает object и он может быть числом стройкой, а сравнивается с fieldValue которая строка
-        //     Плюс поиск по всем сущностям. Это может попасть по скорости, но, вроде, не должно влиять, так как не сильно оно используется
-        if (!repository.AllEntities().Any(x =>  pi.Getter(x).Equals(fieldValue)))
-            throw new AssertionException(string.Format("Нет данных '{0}'='{1} в справочнике '{2}'({3})", rusFieldName, fieldValue, sprName, repository.GetType().Name));
-    }
-
-
-
-    [StepDefinition("вводим в справочник '([^']+)' запись:")]
-    [StepDefinition("вводим в справочник '([^']+)' записи:")]
-    public void InsertSprRows(string sprName, Table rows)
-    {
-        sprName = TestHelper.ReplaceVariable(sprName);
-        rows = TestHelper.ReplaceVariable(rows);
-
-        var domainDesc = TDI.Instance.GetDomainDesc(sprName);
-        var repository = domainDesc.Repository;
-
-        foreach (var row in rows.Rows)
-        {
-            try
-            {
-                var domain = TestHelper.CreateAndFillSpr(domainDesc, row);
-                repository.UntypedSave(domain);
-            }
-            catch (Exception ex)
-            {
-                Log.Default.Error(ex, "Ошибка загрузки справочника {Строка}", row.ToDictionary(x => x.Key, x => x.Value));
-                throw;
-            }
-        }
     }
 
     /// <summary>
