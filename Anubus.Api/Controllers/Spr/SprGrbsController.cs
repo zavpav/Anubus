@@ -10,7 +10,7 @@ namespace Anubus.Api.Controllers.Spr;
 public class SprGrbsController : SprControllerBase<SprGrbs, SprGrbsListDto, SprGrbsEntityDto>
 {
     public SprGrbsController(IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory, ILogger logger)
-        : base(dbContextFactory, logger, CreateMapperConfiguration())
+        : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprGrbs)
     {
     }
 

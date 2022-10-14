@@ -2,7 +2,7 @@
 
 namespace Anubus.Api.Domain.Spr;
 
-public class SprGrbs 
+public class SprGrbs : IEntityBase
 {
     /// <summary> ИД </summary>
     [Description("ИД")]

@@ -1,7 +1,7 @@
 ﻿namespace Anubus.Api.Domain;
 
 /// <summary> Базовый класс для справочника </summary>
-public class SprSimpleBase
+public class SprSimpleBase : IEntityBase
 {
     /// <summary> ИД </summary>
     [Description("ИД")]

@@ -9,7 +9,7 @@ namespace Anubus.Api.Controllers.Spr;
 public class SprRzPrzController : SprControllerBase<SprRzPrz, SprRzPrzListDto, SprRzPrzEntityDto>
 {
     public SprRzPrzController(IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory, ILogger logger)
-    : base(dbContextFactory, logger, CreateMapperConfiguration())
+    : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprRzPrz)
     {
     }
 

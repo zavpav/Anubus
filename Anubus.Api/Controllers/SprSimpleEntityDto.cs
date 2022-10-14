@@ -28,9 +28,32 @@ public class SprSimpleEntityDto
     public DateTime? ToDate { get; set; }
 }
 
+/// <summary> DTO для отображения древовидных сущностей </summary>
+public interface ITreeEntityDto
+{
+    /// <summary> ИД </summary>
+    long Id { get; set; }
+
+    /// <summary> Родительский ИД для дерева </summary>
+    long? ParentId { get; set; }
+
+    /// <summary> Информация о родителе </summary>
+    string? ParentInfo { get; set; }
+}
+
+/// <summary> Жирная-DTO для отображения древовидных сущностей </summary>
+/// <remarks>Нужно что б не париться со справочниками</remarks>
+public interface ITreeEntityFatDto : ITreeEntityDto
+{
+    /// <summary> Код </summary>
+    string Code { get; set; }
+
+    /// <summary> Краткое наименование </summary>
+    string ShortName { get; set; }
+}
 
 /// <summary> Dto отображения древовидного справочника </summary>
-public class SprSimpleTreeEntityDto
+public class SprSimpleTreeEntityDto : ITreeEntityFatDto
 {
     /// <summary> ИД </summary>
     [Description("ИД")]
