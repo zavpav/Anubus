@@ -2,26 +2,31 @@ import { environment } from "src/environments/environment";
 import CustomStore from 'devextreme/data/custom_store';
 import * as AspNetData from 'devextreme-aspnet-data-nojquery';
 import { Observable, map } from "rxjs";
-import { ColumnInfo } from "../../domain-info/ColumnInfo";
+import { ColumnInfo } from "../shared/domain-info/ColumnInfo";
 import { HttpClient } from "@angular/common/http";
-import { MetaInformation, MetaInformationService } from "../../domain-info/MetaInformation";
+import { MetaInformation, MetaInformationService } from "../shared/domain-info/MetaInformation";
 
-export class DomainGridServices {
-    constructor(
-        private http: HttpClient,
-        private serverEndpoint: string
-    ) {
+export interface IDomainListService {
+    // Получить поток columnInfo с сервера
+    getListColumnsInfo(): Observable<ColumnInfo[]>
 
+    // Создать store для данных списка
+    createListDataStore(): CustomStore<any, any>
+}
+
+export class DomainListServiceBase<TDto> implements IDomainListService {
+
+    constructor(private http: HttpClient, private endpointPart: string) {
     }
 
-
+    // #region Работа с листом
     // Получить endpoint на информацию по домену
     getColumnInfoEndpoint(): string {
-        return environment.mainEndpoint + this.serverEndpoint + "/ListColumnInfo"
+        return environment.mainEndpoint + this.endpointPart + "/ListColumnInfo"
     }
 
     // Получить поток columnInfo с сервера
-    getColumnsInfo(): Observable<ColumnInfo[]> {
+    getListColumnsInfo(): Observable<ColumnInfo[]> {
         return this.http.get(this.getColumnInfoEndpoint())
             .pipe(map(metaInfos => {
                 const columnInfos: ColumnInfo[] = []
@@ -40,11 +45,11 @@ export class DomainGridServices {
 
     // Получить endpoint на список
     getListEndpoint(): string {
-        return environment.mainEndpoint + this.serverEndpoint + "/List"
+        return environment.mainEndpoint + this.endpointPart + "/List"
     }
 
     // Создать store для данных списка
-    createDefaultDataStore(): CustomStore<any, any> {
+    createListDataStore(): CustomStore<any, any> {
         return AspNetData.createStore({
             key: 'id',
             loadUrl: this.getListEndpoint(),
@@ -60,4 +65,7 @@ export class DomainGridServices {
         });
 
     }
+    // #endregion Работа с листом
+
+
 }

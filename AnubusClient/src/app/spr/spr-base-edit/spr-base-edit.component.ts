@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { DxFormComponent } from 'devextreme-angular';
 import { Item, SimpleItem } from 'devextreme/ui/form';
 import { MetaInformation, MetaInformationService } from 'src/app/shared/domain-info/MetaInformation';

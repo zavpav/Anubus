@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SprGrbsListService } from './spr-grbs-list.service';
 
 @Component({
   selector: 'app-spr-grbs-list',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SprGrbsListComponent implements OnInit {
 
-  constructor() { }
+  constructor(public gridService: SprGrbsListService) { }
 
   ngOnInit(): void {
   }

@@ -1,0 +1,62 @@
+<dx-tree-list id="gridContainer"
+    [dataSource]="dataSource"
+    [showBorders]="true"
+    remoteOperations="true"
+    [allowColumnReordering]="true"
+    keyExpr="id"
+    parentIdExpr="parentId"
+>
+    <dxo-filter-panel [visible]="true" ></dxo-filter-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[10, 25, 50, 100]"
+    ></dxo-pager>
+    <dxo-search-panel
+        [visible]="true"
+        [highlightCaseSensitive]="false"
+    ></dxo-search-panel>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+
+    <dxi-column *ngFor="let c of showedColumns" 
+        [caption]="c.caption" 
+        [dataField]="c.dataField" 
+        [dataType]="c.dataType" 
+        [width]="c.width"
+        [format]="c.format"
+        [cellTemplate]="c.dataField === 'actions' ? 'actionsTemplate' : undefined" 
+        [allowResizing]="true"
+        [allowSorting]="allowVisualOperation(c)"
+        [allowSearch]="allowVisualOperation(c)"
+        [allowReordering]="allowVisualOperation(c)"
+        [allowFiltering]="allowVisualOperation(c)"
+        [allowExporting]="allowVisualOperation(c)"
+        [allowHiding]="allowVisualOperation(c)"
+        [allowGrouping]="allowVisualOperation(c)"
+    ></dxi-column>
+
+    <!-- <div *dxTemplate="let d of 'actionsTemplate'">
+        <ng-container *ngFor="let actionInfo of parsedActions(d); trackBy: trackByFn">
+            <a
+                id="{{actionInfo.trackBy}}"
+                [routerLink]="getRouteForAction(d.data.id, actionInfo)"
+                (mouseenter)="showOperationTooltip($event, actionInfo)"
+                (mouseleave)="hideOperationTooltip($event)"
+            >
+                <span style="font-size: larger; color: black; ">{{ actionInfo.glyph }}</span>    
+            </a>
+        </ng-container>
+        
+        <dx-tooltip 
+            position="top"
+            [hideOnOutsideClick]="true"
+            [visible]="!!currentTooltip?.target && currentTooltip?.rowId == d.data.id.toString()"
+            [target]="'#' + currentTooltip?.target"
+        >
+            {{currentTooltip?.tooltip+ "" }}
+        </dx-tooltip> -->
+
+        <dxo-tooltip [enabled]="false"></dxo-tooltip>
+
+</dx-tree-list>

@@ -7,10 +7,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import CustomStore from 'devextreme/data/custom_store';
 
 import { ColumnInfo } from '../../domain-info/ColumnInfo';
-import { environment } from 'src/environments/environment';
-import { DomainGridServices } from './DomainGridServices';
 import { HttpClient } from '@angular/common/http';
 import { ActionInfo } from '../../domain-info/ActionInfo';
+import { IDomainListService } from 'src/app/services/domain-list-service-base.service';
 
 // Описание tooltip
 interface CurrentTooltipInfo {
@@ -38,9 +37,9 @@ interface InternalActionInfo {
   ]
 })
 export class DomainGridComponent implements OnInit {
-  // endpoint получения данных для списка
+  // Вспомогательный класс преобразования данных для работы с сервером
   @Input()
-  endpoint!: string
+  gridService?: IDomainListService
 
   //Заполненные данные методами devextreme
   dataSource!: CustomStore<any, any>
@@ -48,19 +47,18 @@ export class DomainGridComponent implements OnInit {
   // Набор отображаемых колонок
   showedColumns?: ColumnInfo[];
 
-  // Вспомогательный класс преобразования данных для работы с сервером
-  domainGridServices?: DomainGridServices
-
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   ngOnInit(): void {
-    const domainGridServices = new DomainGridServices(this.http, this.endpoint)
-    this.domainGridServices = domainGridServices
-    domainGridServices.getColumnsInfo()
+    if (!this.gridService) {
+      throw new Error("domainGridServices не инициализирован")
+    }
+
+    this.gridService.getListColumnsInfo()
       .subscribe(columnInfos => {
         columnInfos = [{ dataField: "actions", caption: "Действия" }, ...columnInfos]
         this.showedColumns = columnInfos.filter(x => !x.dataField.endsWith("id") && !x.dataField.endsWith("Id"))
-        this.dataSource = domainGridServices.createDefaultDataStore()
+        this.dataSource = this.gridService!.createListDataStore()
       })
   }
 
