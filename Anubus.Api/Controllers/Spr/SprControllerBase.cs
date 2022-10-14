@@ -3,6 +3,10 @@ using DevExtreme.AspNet.Data;
 
 namespace Anubus.Api.Controllers.Spr
 {
+    /// <summary> Базовый контроллер простых справочников </summary>
+    /// <typeparam name="TDomain">Доменный объект</typeparam>
+    /// <typeparam name="TListDto">DTO для списка</typeparam>
+    /// <typeparam name="TEntityDto">DTO для редактирования</typeparam>
     public class SprControllerBase<TDomain, TListDto, TEntityDto> : Controller
         where TDomain : class, IEntityBase
         where TListDto : class
@@ -28,7 +32,7 @@ namespace Anubus.Api.Controllers.Spr
 
         #region Работа со списком справочника
 
-        /// <summary> Получить список элементов справочника ГРБС </summary>
+        /// <summary> Получить список элементов справочника </summary>
         [HttpGet("List")]
         public async Task<IActionResult> List(UserContext userContext, DxDataSourceLoadOptions loadOptions)
         {
