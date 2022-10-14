@@ -1,0 +1,18 @@
+<ng-container *ngIf="!!entity; else elsePlaceholder">
+    <dx-form id="spr" [formData]="entity">
+        <ng-container *ngIf="isTree">
+            <dxi-item [label]='{text:"Группа"}'  dataField="parentName"></dxi-item>
+        </ng-container>
+        <dxi-item [label]='{text:"Код"}' dataField="code"></dxi-item>
+        <dxi-item [label]='{text:"Краткое наименование"}' dataField="shortName"></dxi-item>
+        <dxi-item [label]='{text:"Полное наименование"}' dataField="fullName"></dxi-item>
+        <dxi-item [label]='{text:"Дата начала"}' dataField="onDate"></dxi-item>
+        <dxi-item [label]='{text:"Дата окончания"}' dataField="toDate"></dxi-item>
+    </dx-form>
+    <dx-button text="ЖМИ!" (onClick)="saveForm()"></dx-button>
+    
+    <div>{{testMessage}}</div>
+</ng-container>
+<ng-template #elsePlaceholder>
+    Загрузка
+</ng-template>

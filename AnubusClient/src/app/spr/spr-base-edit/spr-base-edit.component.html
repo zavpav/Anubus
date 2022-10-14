@@ -1,0 +1,20 @@
+<div [hidden]="!isLoaded">
+    <dx-form id="spr"
+            [formData]="entity" 
+            [labelMode]="'floating'"
+            (onFieldDataChanged)="onFieldDataChanged($event)"
+            #sprForm 
+            >
+        <ng-container *ngIf="isTree">
+            <dxi-item [label]='{text:"Группа"}'  dataField="parentName"></dxi-item>
+        </ng-container>
+        
+        <dxi-item  [label]='{text:"Дата окончания"}' dataField="toDate" width="3"></dxi-item>
+    </dx-form>
+    <dx-button text="ОК" (onClick)="okButton()" [disabled]="!isValid"></dx-button>
+    <dx-button text="Отмена" (onClick)="cancelButton()"></dx-button>
+</div>
+
+<ng-template [hidden]="isLoaded">
+    <div>Загрузка</div>
+</ng-template>
