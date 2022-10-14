@@ -41,6 +41,15 @@ public class SprRzPrzController : Controller
         return Json(data);
     }
 
+    /// <summary> Получить информацию по колонкам </summary>
+    [HttpGet("ListColumnInfo")]
+    public async Task<JsonResult> ListColumnInfo(UserContext userContext)
+    {
+        var meta = await DataWithMetaHelper.GetMetainformationForType<SprRzPrzListDto>();
+        await DataWithMetaHelper.UpdateMetaFrom<SprRzPrz>(meta);
+        return Json(meta);
+    }
+
     /// <summary> DTO представления справочника РзПрз </summary>
     public class SprRzPrzListDto : SprSimpleListDto
     {
@@ -60,14 +69,30 @@ public class SprRzPrzController : Controller
                 .ProjectTo<SprRzPrzEntityDto>(this._autoMapperConfiguration)
                 .FirstOrDefaultAsync();
 
+        if (spr?.ParentId != null)
+        {
+            var parentSpr = await dbContext.SprRzPrz
+                .AsNoTracking()
+                .Where(x => x.Id == spr.ParentId)
+                .ProjectTo<SprRzPrzEntityDto>(this._autoMapperConfiguration)
+                .FirstOrDefaultAsync();
+            if (parentSpr == null)
+                Log.Default.Error("Родительский ИД есть, а данных нет {РодительскийИД}", spr?.ParentId);
+            else
+                spr.ParentInfo = parentSpr.Code + " - " + parentSpr.ShortName;
+        }
+
         if (!withMeta)
             return Json(spr);
 
-        return Json(await DataWithMetaHelper.ReturnWithMeta(spr));
+        var sprWithMetadata = await DataWithMetaHelper.ReturnWithMeta(spr);
+        await sprWithMetadata.UpdateMetaFrom<SprRzPrzEntityDto, SprRzPrz>();
+
+        return Json(sprWithMetadata);
     }
 
     /// <summary> DTO редактирования справочника РзПрз </summary>
-    public class SprRzPrzEntityDto : SprSimpleEntityDto
+    public class SprRzPrzEntityDto : SprSimpleTreeEntityDto
     {
     }
     #endregion

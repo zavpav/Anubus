@@ -18,10 +18,10 @@ public class SprGrbsController : Controller
         this._logger = logger;
         this._autoMapperConfiguration = new MapperConfiguration(
             c =>
-            {
-                c.CreateProjection<SprGrbs, SprGrbsListDto>();
-                c.CreateProjection<SprGrbs, SprGrbsEntityDto>();
-            }
+                {
+                    c.CreateProjection<SprGrbs, SprGrbsListDto>();
+                    c.CreateProjection<SprGrbs, SprGrbsEntityDto>();
+                }
             );
     }
 
@@ -39,6 +39,15 @@ public class SprGrbsController : Controller
         var data = await DataSourceLoader.LoadAsync(source, loadOptions);
 
         return Json(data);
+    }
+    
+    /// <summary> Получить информацию по колонкам </summary>
+    [HttpGet("ListColumnInfo")]
+    public async Task<JsonResult> ListColumnInfo(UserContext userContext)
+    {
+        var meta = await DataWithMetaHelper.GetMetainformationForType<SprGrbsListDto>();
+        await DataWithMetaHelper.UpdateMetaFrom<SprGrbs>(meta);
+        return Json(meta);
     }
 
     /// <summary> DTO представления справочника ГРБС </summary>
@@ -63,7 +72,9 @@ public class SprGrbsController : Controller
         if (!withMeta)
             return Json(spr);
 
-        return Json(await DataWithMetaHelper.ReturnWithMeta(spr));
+        var sprWithMetadata = await DataWithMetaHelper.ReturnWithMeta(spr);
+        await sprWithMetadata.UpdateMetaFrom<SprGrbsEntityDto, SprGrbs>();
+        return Json(sprWithMetadata);
     }
 
     /// <summary> DTO редактирования справочника ГРБС </summary>
