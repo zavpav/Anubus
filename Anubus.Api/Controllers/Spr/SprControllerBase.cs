@@ -46,7 +46,7 @@ namespace Anubus.Api.Controllers.Spr
             return Json(data);
         }
 
-        /// <summary> Получить информацию по колонкам </summary>
+        /// <summary> Получить информацию по колонкам списка </summary>
         [HttpGet("ListColumnInfo")]
         public async Task<JsonResult> ListColumnInfo(UserContext userContext)
         {
