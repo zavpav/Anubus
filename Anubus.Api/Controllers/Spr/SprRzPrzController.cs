@@ -1,4 +1,5 @@
 ﻿using Anubus.Api.Domain.Spr;
+using Microsoft.AspNetCore.Http;
 using static Anubus.Api.Controllers.Spr.SprRzPrzController;
 
 namespace Anubus.Api.Controllers.Spr;
@@ -8,8 +9,11 @@ namespace Anubus.Api.Controllers.Spr;
 [ApiController]
 public class SprRzPrzController : SprControllerBase<SprRzPrz, SprRzPrzListDto, SprRzPrzEntityDto>
 {
-    public SprRzPrzController(IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory, ILogger logger)
-    : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprRzPrz)
+    public SprRzPrzController(
+            IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory,
+            ILogger logger,
+            IHttpContextAccessor httpContextAccessor)
+        : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprRzPrz, httpContextAccessor)
     {
     }
 

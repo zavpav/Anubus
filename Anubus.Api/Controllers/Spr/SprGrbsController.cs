@@ -1,5 +1,6 @@
 ﻿using Anubus.Api.Domain.Spr;
-using DevExtreme.AspNet.Data;
+using Anubus.Api.Notifier;
+using Microsoft.AspNetCore.Http;
 using static Anubus.Api.Controllers.Spr.SprGrbsController;
 
 namespace Anubus.Api.Controllers.Spr;
@@ -9,9 +10,16 @@ namespace Anubus.Api.Controllers.Spr;
 [ApiController]
 public class SprGrbsController : SprControllerBase<SprGrbs, SprGrbsListDto, SprGrbsEntityDto>
 {
-    public SprGrbsController(IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory, ILogger logger)
-        : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprGrbs)
+    public INotifyClient NotifyClient { get; }
+
+    public SprGrbsController(
+            IDbAnubusContextFactory<IGrbsDbContext> dbContextFactory,
+            ILogger logger,
+            INotifyClient notifyClient,
+            IHttpContextAccessor httpContextAccessor)
+        : base(dbContextFactory, logger, CreateMapperConfiguration(), x => x.SprGrbs, httpContextAccessor)
     {
+        NotifyClient = notifyClient;
     }
 
     private static MapperConfiguration CreateMapperConfiguration()
@@ -28,6 +36,59 @@ public class SprGrbsController : SprControllerBase<SprGrbs, SprGrbsListDto, SprG
     /// <summary> DTO представления справочника ГРБС </summary>
     public class SprGrbsListDto : SprSimpleListDto
     {
+    }
+
+    protected override Task SendEntityToQueuery(Anubus.SignalR.LongOperationStart longOperation, SprGrbsEntityDto entityDto)
+    {
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            var updateOperation = new Anubus.SignalR.LongOperationUpdate(
+                longOperation.ConnectionId,
+                longOperation.ExecutionId)
+            {
+                IsFinished = false,
+                Message = "Шаг первый"
+            };
+
+            await this.NotifyClient.SendNotify(updateOperation);
+
+            await Task.Delay(1000);
+            updateOperation = new Anubus.SignalR.LongOperationUpdate(
+                longOperation.ConnectionId,
+                longOperation.ExecutionId + "1")
+            {
+                IsFinished = false,
+                Message = "Шаг второй"
+            };
+
+            await this.NotifyClient.SendNotify(updateOperation);
+
+            await Task.Delay(2000);
+            updateOperation = new Anubus.SignalR.LongOperationUpdate(
+                longOperation.ConnectionId,
+                longOperation.ExecutionId)
+            {
+                IsFinished = false,
+                Message = "Шаг третий"
+            };
+
+            await this.NotifyClient.SendNotify(updateOperation);
+
+            await Task.Delay(1000);
+            updateOperation = new Anubus.SignalR.LongOperationUpdate(
+                longOperation.ConnectionId,
+                longOperation.ExecutionId)
+            {
+                IsFinished = true,
+                Message = "Конец"
+            };
+
+            await this.NotifyClient.SendNotify(updateOperation);
+        });
+
+        return Task.CompletedTask;
     }
 
     /// <summary> DTO редактирования справочника ГРБС </summary>

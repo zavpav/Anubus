@@ -1,9 +1,11 @@
 using Anubus.Api;
+using Anubus.Api.Notifier;
 using Anubus.Services.Logging;
 using Anubus.Services.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,13 @@ builder.Services.AddSingleton<SecuritySettings>(_ =>
     {
         WithoutIdm = true,
     });
+
+
+
+builder.Services.AddSignalR()
+    .AddJsonProtocol(opt => opt.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddTransient<INotifyClient, NotifyClient>();
+
 
 
 var app = builder.Build();
@@ -55,5 +64,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<Anubus.Api.Notifier.NotifyHub>("/notify");
+
 
 app.Run();

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import {
   DxMenuModule,
@@ -11,7 +11,7 @@ import {
   DxButtonModule,
   DxTooltipModule,
   DxPopoverModule,
-
+  DxLoadPanelModule,
   DxFormModule,
   DxTextBoxModule,
   DxNumberBoxModule,
@@ -41,6 +41,13 @@ import { SprBaseGridComponent } from './spr/spr-base-grid/spr-base-grid.componen
 
 
 locale('ru')
+
+import { RequiredHeadersInjectService } from './services/required-headers-inject.service';
+const AUTH_SIGNALR_INJECTABLE: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: RequiredHeadersInjectService,
+  multi: true
+}
 
 
 @NgModule({
@@ -75,11 +82,13 @@ locale('ru')
     DxFormModule,
     DxTextBoxModule,
     DxNumberBoxModule,
-    DxDateBoxModule
+    DxDateBoxModule,
+    DxLoadPanelModule
   ],
   providers: [
     AuthService,
-    AuthGuardService
+    AuthGuardService,
+    AUTH_SIGNALR_INJECTABLE
   ],
   bootstrap: [AppComponent]
 })

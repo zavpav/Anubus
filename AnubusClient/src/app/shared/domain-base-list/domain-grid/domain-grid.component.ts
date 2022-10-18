@@ -74,6 +74,7 @@ export class DomainGridComponent implements OnInit {
     return routeInfo;
   }
 
+  loadingVisible: boolean = false
 
   // Проверка на то что доступны "визуальные операции" типа сортировки, фильтров и т.д. и тп.
   // Для "действий" это запрещено.

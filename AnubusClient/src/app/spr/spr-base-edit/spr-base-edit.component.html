@@ -1,4 +1,3 @@
-<div [hidden]="!isLoaded">
     <dx-form id="spr"
             [formData]="entity" 
             [labelMode]="'floating'"
@@ -13,8 +12,16 @@
     </dx-form>
     <dx-button text="ОК" (onClick)="okButton()" [disabled]="!isValid"></dx-button>
     <dx-button text="Отмена" (onClick)="cancelButton()"></dx-button>
-</div>
 
-<ng-template [hidden]="isLoaded">
-    <div>Загрузка</div>
-</ng-template>
+<dx-load-panel
+    shadingColor="rgba(0,0,0,0.4)"
+    [position]=" 'center'"
+    [message]="loadingMessage"
+    [(visible)]="!isLoaded || isSaving"
+    [showIndicator]="true"
+    [showPane]="true"
+    [shading]="true"
+    [hideOnOutsideClick]="false"
+>
+</dx-load-panel>
+

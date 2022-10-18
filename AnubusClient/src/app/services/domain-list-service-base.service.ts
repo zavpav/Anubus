@@ -5,6 +5,8 @@ import { Observable, map } from "rxjs";
 import { ColumnInfo } from "../shared/domain-info/ColumnInfo";
 import { HttpClient } from "@angular/common/http";
 import { MetaInformation, MetaInformationService } from "../shared/domain-info/MetaInformation";
+import { HttpHeadersService } from "./http-headers.service";
+import { Component, Host, Inject, Injector } from "@angular/core";
 
 export interface IDomainListService {
     // Получить поток columnInfo с сервера
@@ -16,7 +18,13 @@ export interface IDomainListService {
 
 export class DomainListServiceBase<TDto> implements IDomainListService {
 
-    constructor(private http: HttpClient, private endpointPart: string) {
+    private httpHeadersService: HttpHeadersService = this.injector.get(HttpHeadersService)
+    private http: HttpClient = this.injector.get(HttpClient)
+
+    constructor(
+        private injector: Injector, // Через ijector не очень хорошо, но не удобно 100500 параметров добивать каждый раз. Может быть потом сделаю.
+        private endpointPart: string
+    ) {
     }
 
     // #region Работа с листом
@@ -53,7 +61,17 @@ export class DomainListServiceBase<TDto> implements IDomainListService {
         return AspNetData.createStore({
             key: 'id',
             loadUrl: this.getListEndpoint(),
-            onBeforeSend: (operation: string, ajaxSettings: { data?: any }) => {
+            onBeforeSend: (operation: string, ajaxSettings: { data?: any, headers?: { [key: string]: any } }) => {
+                if (!ajaxSettings.headers) {
+                    ajaxSettings.headers = {}
+                }
+                ajaxSettings.headers['Content-Type'] = 'application/json'
+                for (let h of this.httpHeadersService!.getHeaders()) {
+                    ajaxSettings.headers[h[0]] = h[1]
+                }
+
+                console.log('listDataStore onBeforeSend', ajaxSettings)
+
                 if (operation == "load") {
                     //                            cntx.fillObjAsField(ajaxSettings.data);
                 }

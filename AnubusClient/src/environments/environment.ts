@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  mainEndpoint: "https://localhost:7293/"
+  mainEndpoint: "https://localhost:7293/",
+  notifyEndpoint: "https://localhost:7293/notify",
 };
 
 /*

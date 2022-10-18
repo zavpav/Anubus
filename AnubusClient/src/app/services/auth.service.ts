@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Observable } from 'rxjs';
 
 export interface User {
+  token: string
   login: string
   name: string
 }
@@ -15,14 +16,16 @@ const defaultPath = '/';
 export class AuthService {
 
   private _user: User | null = null
-  
-  constructor(private router: Router) { }
 
-  isLoggedIn() : boolean{
+  constructor(private router: Router) {
+    this._user = { token: "AUTH_TOKEN_ADASDHLKJKLJHASD", login: "Логин", name: "Пользовательный пользователь" }
+  }
+
+  isLoggedIn(): boolean {
     return !!this._user;
   }
 
-  logOut(): void{
+  logOut(): void {
     this._user = null;
     this.router.navigate(['/login-form'])
   }
@@ -37,7 +40,7 @@ export class AuthService {
 @Injectable()
 export class AuthGuardService implements CanActivate {
   constructor(private router: Router, private authService: AuthService) { }
-  
+
   // | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const isLoggedIn = this.authService.isLoggedIn();
@@ -50,7 +53,7 @@ export class AuthGuardService implements CanActivate {
     ].includes(route.routeConfig?.path || defaultPath);
 
 
-    if (isLoggedIn && isAuthForm){
+    if (isLoggedIn && isAuthForm) {
       this.authService.lastAuthenticatedPath = defaultPath;
       this.router.navigate([defaultPath]);
       return false;
@@ -66,5 +69,5 @@ export class AuthGuardService implements CanActivate {
 
     return isLoggedIn || isAuthForm;
   }
-  
+
 }

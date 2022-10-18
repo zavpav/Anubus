@@ -49,6 +49,8 @@ public class StartUp
         if (this._skipWebData)
             return;
 
+        services.AddHttpContextAccessor();
+
         services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();

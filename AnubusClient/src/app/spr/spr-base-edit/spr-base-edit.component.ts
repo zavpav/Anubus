@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { DxFormComponent } from 'devextreme-angular';
 import { Item, SimpleItem } from 'devextreme/ui/form';
+import { filter, Observable } from 'rxjs';
+import { ServerNotifierService } from 'src/app/services/server-notifier.service';
 import { MetaInformation, MetaInformationService } from 'src/app/shared/domain-info/MetaInformation';
 
 import { environment } from 'src/environments/environment';
@@ -13,7 +15,7 @@ import { SprBaseEntity } from './spr-base-entity';
   styles: [
   ]
 })
-export class SprBaseEditComponent implements OnInit, AfterViewInit {
+export class SprBaseEditComponent implements OnInit, OnDestroy {
 
   @Input()
   entityId?: number
@@ -27,20 +29,24 @@ export class SprBaseEditComponent implements OnInit, AfterViewInit {
   @ViewChild("sprForm") dxForm!: DxFormComponent
 
   entity?: SprBaseEntity
-  meta?: MetaInformation[];
-  isLoaded: boolean = false;
+  meta?: MetaInformation[]
+  isLoaded: boolean = false
   isValid: boolean = false
+  isSaving: boolean = false
+  loadingMessage: string = ""
+
+  //  notify$: Observable<string>
 
   constructor(private http: HttpClient,
-    private metaInformationService: MetaInformationService
+    private metaInformationService: MetaInformationService,
+    private serverNotifierService: ServerNotifierService
   ) {
     this.isTree = false
+    //    this.notify$ = serverNotifierService.
   }
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
+    this.loadingMessage = "Загрузка"
     this.http.get(environment.mainEndpoint + this.endpoint, { params: { withMeta: true, id: this.entityId ?? -1 } })
       .subscribe((x: any) => {
         console.log(x)
@@ -49,6 +55,10 @@ export class SprBaseEditComponent implements OnInit, AfterViewInit {
         this.fillEditForm();
         this.isLoaded = true
       })
+  }
+
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
   }
 
   fillEditForm() {
@@ -77,6 +87,34 @@ export class SprBaseEditComponent implements OnInit, AfterViewInit {
 
   okButton(): void {
     console.log("Сохранение")
+    this.isSaving = true
+    this.loadingMessage = "Сохранение"
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    this.http.post(environment.mainEndpoint + this.endpoint, this.entity, { headers: headers })
+      .subscribe((saveRes: any) => {
+        console.log('saveInfo', saveRes)
+
+        // Обновления notify
+        this.serverNotifierService.notifies$
+          .pipe(filter(flt => flt.executionId === saveRes.executionId))
+          .subscribe(n => {
+            console.log('updateEditFormBySignalR', n)
+            if (n.message) {
+              this.loadingMessage = n.message
+            }
+            if (n.isFinished) {
+              this.isSaving = false
+            }
+          })
+
+        // Подписка на ошибки?
+
+      })
+    //    setTimeout(() => { this.isSaving = false }, 10000)
   }
 
   cancelButton(): void {
