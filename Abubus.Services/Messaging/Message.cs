@@ -1,6 +1,6 @@
 ﻿namespace Anubus.Services.Messaging;
- 
-public class Message<TBody>
+
+public class Message<TBody> : IMessage
     where TBody : class
 {
     /// <summary> ИД подключения signalR </summary>

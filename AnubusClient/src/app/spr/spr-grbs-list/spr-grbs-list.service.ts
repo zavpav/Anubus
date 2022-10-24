@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { DomainListServiceBase } from 'src/app/services/domain-list-service-base.service';
-import { HttpHeadersService } from 'src/app/services/http-headers.service';
 import { IBaseDomain } from 'src/app/shared/domain-info/base-domain-object';
 
 @Injectable({

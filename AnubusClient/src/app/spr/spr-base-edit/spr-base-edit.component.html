@@ -1,3 +1,9 @@
+    <div *ngIf="serverErrors">
+        Серверные ошибки
+        <p *ngFor="let err of serverErrors">
+            {{ err }}
+        </p>
+    </div>
     <dx-form id="spr"
             [formData]="entity" 
             [labelMode]="'floating'"

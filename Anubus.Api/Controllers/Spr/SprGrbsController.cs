@@ -52,27 +52,27 @@ public class SprGrbsController : SprControllerBase<SprGrbs, SprGrbsListDto, SprG
                 Message = "Шаг первый"
             };
 
-            await this.NotifyClient.SendNotify(updateOperation);
+            //await this.NotifyClient.SendNotify(updateOperation);
 
-            await Task.Delay(1000);
-            updateOperation = new Anubus.SignalR.LongOperationUpdate(
-                longOperation.ConnectionId,
-                longOperation.ExecutionId + "1")
-            {
-                IsFinished = false,
-                Message = "Шаг второй"
-            };
+            //await Task.Delay(1000);
+            //updateOperation = new Anubus.SignalR.LongOperationUpdate(
+            //    longOperation.ConnectionId,
+            //    longOperation.ExecutionId + "1")
+            //{
+            //    IsFinished = false,
+            //    Message = "Шаг второй"
+            //};
 
-            await this.NotifyClient.SendNotify(updateOperation);
+            //await this.NotifyClient.SendNotify(updateOperation);
 
-            await Task.Delay(2000);
-            updateOperation = new Anubus.SignalR.LongOperationUpdate(
-                longOperation.ConnectionId,
-                longOperation.ExecutionId)
-            {
-                IsFinished = false,
-                Message = "Шаг третий"
-            };
+            //await Task.Delay(2000);
+            //updateOperation = new Anubus.SignalR.LongOperationUpdate(
+            //    longOperation.ConnectionId,
+            //    longOperation.ExecutionId)
+            //{
+            //    IsFinished = false,
+            //    Message = "Шаг третий"
+            //};
 
             await this.NotifyClient.SendNotify(updateOperation);
 
@@ -84,6 +84,7 @@ public class SprGrbsController : SprControllerBase<SprGrbs, SprGrbsListDto, SprG
                 IsFinished = true,
                 Message = "Конец"
             };
+            updateOperation.AddError("code", "Ошибка кода");
 
             await this.NotifyClient.SendNotify(updateOperation);
         });

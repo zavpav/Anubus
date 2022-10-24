@@ -63,6 +63,21 @@ public class SprControllerBase<TDomain, TListDto, TEntityDto> : Controller
 
     #region Работа с отдельным элементов справочника
 
+    public class CheckErrorInfo
+    {
+        public string? Message { get; set; }
+    }
+    /// <summary> Проверка на уникальность кода </summary>
+    /// <param name="code">Проверяемый код</param>
+    [HttpGet("Entity/ValidateUniqueCode")]
+    public Task<JsonResult> ValidateUniqueCode(string code)
+    {
+        if (code == "320")
+            return Task.FromResult(Json(new CheckErrorInfo()));
+            
+        return Task.FromResult(Json(new CheckErrorInfo() { Message = "Проверка кода " + code }));
+    }
+
     /// <summary> Получить полный элемент справочника </summary>
     [HttpGet("Entity")]
     public async Task<JsonResult> Get(long id, bool withMeta = false)

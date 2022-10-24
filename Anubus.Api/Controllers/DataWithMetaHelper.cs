@@ -50,11 +50,7 @@ public static class DataWithMetaHelper
 
         foreach (var pi in typeof(T).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
         {
-            string name;
-            if (pi.Name.Length <= 1)
-                name = pi.Name.ToLower();
-            else
-                name = char.ToLower(pi.Name[0]) + pi.Name.Substring(1);
+            var name = pi.Name.ToLowerFirst();
 
             var meta = new MetaInformation(name);
 

@@ -3,6 +3,8 @@ import * as signalR from '@microsoft/signalr';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+export type ErrorData = { [key: string]: string[] };
+
 export interface LongOperationUpdate {
 
   // ИД подключения signalR
@@ -22,6 +24,9 @@ export interface LongOperationUpdate {
 
   // Сообщение пользователю 
   message?: string
+
+  // Сообщения об ошибках
+  domainErrors?: ErrorData
 }
 
 @Injectable({

@@ -3,9 +3,7 @@ import { SprGrbsListService } from './spr-grbs-list.service';
 
 @Component({
   selector: 'app-spr-grbs-list',
-  templateUrl: './spr-grbs-list.component.html',
-  styles: [
-  ]
+  templateUrl: './spr-grbs-list.component.html'
 })
 export class SprGrbsListComponent implements OnInit {
 
